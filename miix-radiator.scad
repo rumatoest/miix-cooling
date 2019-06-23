@@ -1,6 +1,6 @@
 // For Lenovo Miix 320 radiator size should be about 10x21cm
 
-$fn=5;
+$fn=25;
 
 //HEIGHT
 H=100;
@@ -88,7 +88,7 @@ difference() {
     translate([BL+OFFSET+wspace-NW, BL+border2/2, TH-RD])
         rblock(wspace+NW, hspace2, BEAMW*BEAMF, RD, RT, NW); 
     
-    translate([BL+BORDER+RVH, BL+BORDER, TH-RD]) {
+    translate([BL+RVH-NW, BL+BORDER, TH-RD]) {
         rotate([0,0,90])
         rnotch(H-BORDER*2, RVH, RD, NW, RT, true);
     }
