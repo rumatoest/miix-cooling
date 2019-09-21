@@ -4,7 +4,7 @@ TABLET RADIATOR GENERATOR
 This libarary should help you to create radiators for
 tablet like devices. 
 
-To make real it you should be familiar with CNC devices.
+To make it real you should be familiar with CNC devices.
 
 Right now it is aimed on Lenovo Miix devices where "heater"
 located near to one side of tablet and this region 
@@ -15,7 +15,7 @@ one side of tablet and distribute it uniformly across
 all available surface.
 
 NOTE:
- - For Lenovo Miix 320 radiator size should be about 10x21cm
+ - For Lenovo Miix 320 radiator size should be about 22x8.5cm
 */
 
 
@@ -37,7 +37,7 @@ $fn=25;
 
 H=84; // Main block height
 W=222; // Main block width
-TH=2.5; // Main block thickness
+TH=2.5; // Main block thickness (Z axis)
 CR=2; // CORNER radius
 
 BL=3; // Basement ledge width
@@ -45,7 +45,7 @@ BT=0.5; // Basement ledge thickness (under the case)
 
 // RADIATOR CFG
 R_BRD=8; // Internal offset
-R_S=1; // Nuber of block separated by offset
+R_S=2; // Nuber of block separated by offset
 
 // WARNING this value depends on CNC end mill radius
 R_NT=2.5; // Minimum notch width
