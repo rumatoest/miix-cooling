@@ -35,35 +35,27 @@ show_radiator();
 //
 $fn=25;
 
-//Height
-H=80;
-//Width
-W=222;
-//Total thickness
-TH=2.4;
-// Basement internal thickness (under the case)
-BT=0.5;
-// Basement ledge width
-BL=3;
-// CORNER radius
-CR=2;
+H=84; // Main block height
+W=222; // Main block width
+TH=2.5; // Main block thickness
+CR=2; // CORNER radius
 
-// Radiator ribs configuration
-// Border size
-R_BRD=8;
-//Min notch thickness - should depend on your cutter radius
-R_NT=2.5;
-// Rib thickness
-R_T=2;
-// Split into blocks
-R_S=2;
-// Deepth at hot side
-R_DH=0.5;
-// Deepth at cool side
-R_DC=2;
+BL=3; // Basement ledge width
+BT=0.5; // Basement ledge thickness (under the case)
 
-R_HW=50;
-R_CW=80;
+// RADIATOR CFG
+R_BRD=8; // Internal offset
+R_S=1; // Nuber of block separated by offset
+
+// WARNING this value depends on CNC end mill radius
+R_NT=2.5; // Minimum notch width
+R_T=2; // Rim thickness
+
+R_DH=0.6; // Notch deepth at hot side
+R_DC=2.1; // Deepth at cool side
+
+R_HW=60; // Hot side width
+R_CW=40; // Cool side width
 
 //
 // TEMPLATE MODULES
@@ -98,7 +90,7 @@ module show_template(tw=4, th=2, hold=8, holdw=30, holdh=0.4) {
 // RADIATOR MODULES
 //
 function max_odd_items(dist, item, space) = 
-    floor((dist + item) / (item + space));
+    floor((dist-space) / (item + space));
 
 function space_items(dist, item, count) =
     (dist - item*count)/(count + 1);
@@ -115,27 +107,29 @@ module radiator_cutting() {
     w=W-R_BRD *2;
     mxh=H-R_BRD *2;
     blkh=(mxh-R_BRD*(R_S-1)) / R_S;
-    
-    mxi=max_odd_items(blkh,R_T,R_NT);
-    spc=space_items(blkh,R_T,mxi);
-    echo("Notch width:", spc);
+    //echo("Block height", blkh);
+    mxi=max_odd_items(blkh, R_T, R_NT);
+    //echo("Total ribs", mxi);
+    spc=space_items(blkh,R_T, mxi);
+    echo("NOTE: radiator notch width", spc);
     ioff=0;
     for (iz=[0:R_S-1]) {
         izoff=iz*(R_BRD+blkh);
         for (i=[0:mxi]) {
             ioff=i*(R_T+spc)+izoff;
-            
-            translate([0,ioff,0]) cube([w, spc, TH]);
+            translate([0,ioff,0]) cube([w, spc, TH+0.1]);
         }
     }
 }
 
 module radiator_depth() {
+    h=H-R_BRD;
     hh=TH-R_DH;
     hc=TH-R_DC;
     tw=W-R_HW-R_CW;
     
-    cube([R_HW, H, hh]);
+    translate([0,R_BRD/2,0])
+        cube([R_HW, h, hh]);
     
     translate([R_HW,0,hh])
         rotate([-90,0,0])
@@ -146,8 +140,9 @@ module radiator_depth() {
     //translate([R_HW,0,0])
         //cube([tw, H, TH-(R_DC+R_DH)/2]);
     
-    translate([W-R_CW,0,0])
-        cube([R_CW, H, TH-R_DC]);
+    
+    translate([W-R_CW,R_BRD/2,0])
+        cube([R_CW, h, TH-R_DC]);
 }
 
 module show_radiator() {
