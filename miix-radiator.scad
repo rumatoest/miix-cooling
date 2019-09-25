@@ -1,4 +1,4 @@
-/*
+ /*
 TABLET RADIATOR GENERATOR
 
 This libarary should help you to create radiators for
@@ -37,19 +37,19 @@ $fn=25;
 
 H=84; // Main block height
 W=222; // Main block width
-TH=2.5; // Main block thickness (Z axis)
+TH=2.45; // Main block thickness (Z axis)
 CR=2; // CORNER radius
 
 BL=3; // Basement ledge width
 BT=0.5; // Basement ledge thickness (under the case)
 
 // RADIATOR CFG
-R_BRD=8; // Internal offset
-R_S=2; // Nuber of block separated by offset
+R_BRD=6; // Internal offset
+R_S=3; // Nuber of block separated by offset
 
 // WARNING this value depends on CNC end mill radius
-R_NT=2.5; // Minimum notch width
-R_T=2; // Rim thickness
+R_NT=2.4; // Minimum notch width
+R_T=2; // Rib thickness
 
 R_DH=0.6; // Notch deepth at hot side
 R_DC=2.1; // Deepth at cool side
@@ -131,15 +131,10 @@ module radiator_depth() {
     translate([0,R_BRD/2,0])
         cube([R_HW, h, hh]);
     
-    translate([R_HW,0,hh])
+    translate([R_HW,R_BRD/2,hh])
         rotate([-90,0,0])
-        linear_extrude(height = H, center = false)
+        linear_extrude(height = h, center = false)
         polygon([[0,0],[0,hh],[tw,hh],[tw,hh-hc]]);
-    
-    // Quick solution
-    //translate([R_HW,0,0])
-        //cube([tw, H, TH-(R_DC+R_DH)/2]);
-    
     
     translate([W-R_CW,R_BRD/2,0])
         cube([R_CW, h, TH-R_DC]);
@@ -157,7 +152,9 @@ module show_radiator() {
         translate([BL+R_BRD, BL+R_BRD, 0])
             radiator_cutting();
     }
+    
     translate([BL, BL, 0])
+        color("SteelBlue")
         radiator_depth();
  
 }
