@@ -6,9 +6,9 @@ tablet like devices.
 
 To make it real you should be familiar with CNC devices.
 
-Right now it is aimed on Lenovo Miix devices where "heater"
-located near to one side of tablet and this region 
-is about 1/3 or 1/4 of available width.
+Originally it was created for Lenovo Miix devices 
+where "heater" is located near the one side of tablet 
+and this region is about 1/3 or 1/4 of all width.
 
 Thus current radiator model goal is to move heat away from
 one side of tablet and distribute it uniformly across 
@@ -35,27 +35,43 @@ show_radiator();
 //
 $fn=25;
 
-H=84; // Main block height
-W=222; // Main block width
-TH=2.45; // Main block thickness (Z axis)
-CR=2; // CORNER radius
+// Main block height
+H=84; 
+// Main block width
+W=222; 
+// Main block thickness (Z axis)
+TH=2.45; 
+// CORNER radius
+CR=2; 
+// Basement ledge width
+BL=3; 
+// Basement ledge thickness (under the case)
+BT=0.5; 
 
-BL=3; // Basement ledge width
-BT=0.5; // Basement ledge thickness (under the case)
-
+//
 // RADIATOR CFG
-R_BRD=6; // Internal offset
-R_S=3; // Nuber of block separated by offset
+//
+// Internal offset/border
+R_BRD=6; 
+// Nuber of block separated by offset
+R_S=3; 
 
-// WARNING this value depends on CNC end mill radius
-R_NT=2.4; // Minimum notch width
-R_T=2; // Rib thickness
+// Minimum notch width. WARNING this value depends on CNC end mill radius
+R_NT=2.4; 
+// Rib thickness
+R_T=2; 
+// Round notch corners
+R_RN=true;
 
-R_DH=0.6; // Notch deepth at hot side
-R_DC=2.1; // Deepth at cool side
+// Notch deepth at hot side
+R_DH=0.6; 
+// Deepth at cool side
+R_DC=2.1; 
 
-R_HW=60; // Hot side width
-R_CW=40; // Cool side width
+// Hot side width
+R_HW=60; 
+// Cool side width
+R_CW=60; 
 
 //
 // TEMPLATE MODULES
@@ -103,6 +119,17 @@ module basement(w,h,th,r) {
     }
 }
 
+module notch(w,h,d) {
+   if (R_RN) {
+       r=h/2;
+       translate([r,r,0]) cylinder(d, r, r);
+       translate([r,0,0]) cube([w-h, h, d]);
+       translate([w-r,r,0]) cylinder(d, r, r);
+   } else {
+       cube([w, h, d]);
+   }
+}
+
 module radiator_cutting() {
     w=W-R_BRD *2;
     mxh=H-R_BRD *2;
@@ -117,7 +144,7 @@ module radiator_cutting() {
         izoff=iz*(R_BRD+blkh);
         for (i=[0:mxi]) {
             ioff=i*(R_T+spc)+izoff;
-            translate([0,ioff,0]) cube([w, spc, TH+0.1]);
+            translate([0,ioff,0]) notch(w, spc, TH+0.1);
         }
     }
 }
