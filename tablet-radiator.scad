@@ -101,7 +101,6 @@ module show_template(tw=4, th=2, hold=8, holdw=30, holdh=0.4) {
     }
 }
 
-
 //
 // RADIATOR MODULES
 //
@@ -155,8 +154,8 @@ module radiator_depth() {
     hc=TH-R_DC;
     tw=W-R_HW-R_CW;
     
-    translate([0,R_BRD/2,0])
-        cube([R_HW, h, hh]);
+    translate([R_BRD/2,R_BRD/2,0])
+        cube([R_HW-R_BRD/2, h, hh]);
     
     translate([R_HW,R_BRD/2,hh])
         rotate([-90,0,0])
@@ -173,8 +172,11 @@ module show_radiator() {
         union() {
             translate([BL, BL, 0]) 
                 basement(W,H,TH,CR);
-            color("LightSteelBlue")
-            basement(W+BL*2,H+BL*2,BT,CR);
+            difference() {
+                color("LightSteelBlue")
+                basement(W+BL*2,H+BL*2,BT,CR);
+                translate([BL, BL, 0]) basement(W,H,TH,CR);
+            }
         }
         translate([BL+R_BRD, BL+R_BRD, 0])
             radiator_cutting();
@@ -183,5 +185,4 @@ module show_radiator() {
     translate([BL, BL, 0])
         color("SteelBlue")
         radiator_depth();
- 
 }
